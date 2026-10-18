@@ -1,0 +1,30 @@
+---
+- name: Install and configure Nginx on the Terraform EC2 instance
+  hosts: web
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Install Nginx
+      ansible.builtin.dnf:
+        name: nginx
+        state: present
+
+    - name: Install the project landing page
+      ansible.builtin.copy:
+        dest: /usr/share/nginx/html/index.html
+        owner: root
+        group: root
+        mode: "0644"
+        content: |
+          <!doctype html>
+          <html lang="en">
+          <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mini Project 4</title></head>
+          <body><main><h1>Mini Project 4</h1><p>Nginx was configured with Ansible.</p><p>Infrastructure provisioned with Terraform and GitHub Actions.</p></main></body>
+          </html>
+
+    - name: Enable and start Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
